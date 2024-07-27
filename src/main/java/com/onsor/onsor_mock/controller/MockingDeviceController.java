@@ -37,8 +37,8 @@ public class MockingDeviceController {
     }
 
     @GetMapping("/energy")
-    public PieChartData getEnergyData() {
-        return generateAndSendPieChartData();
+    public void getEnergyData() {
+        generateAndSendPieChartData();
     }
 
     @Scheduled(fixedRate = 5000)  // Send data every 2 seconds
@@ -46,28 +46,16 @@ public class MockingDeviceController {
         generateAndSendPieChartData();
     }
 
-    private PieChartData generateAndSendPieChartData() {
+    private void generateAndSendPieChartData() {
         // Simulate random values for different categories
         double value1 = random.nextDouble() * 35;
         double value2 = random.nextDouble() * 35;
         double value3 = random.nextDouble() * 35;
 
-        // Calculate the total sum of the values
-        double total = value1 + value2 + value3;
-
-        // Normalize the values to ensure their sum is at most 35%
-        if (total > 35) {
-            value1 = (value1 / total) * 35;
-            value2 = (value2 / total) * 35;
-            value3 = (value3 / total) * 35;
-        }
-
         Map<String, Double> dataMap = new HashMap<>();
         dataMap.put("device 1", value1);
         dataMap.put("device 2", value2);
         dataMap.put("device 3", value3);
-
-        PieChartData pieChartData = new PieChartData(dataMap);
 
         // Prepare JSON payload
         StringBuilder payloadBuilder = new StringBuilder("{");
@@ -86,25 +74,6 @@ public class MockingDeviceController {
             System.out.println("Published: " + payload);
         } catch (MqttException e) {
             e.printStackTrace();
-        }
-
-        return pieChartData;
-    }
-
-
-    static class PieChartData {
-        private Map<String, Double> data;
-
-        public PieChartData(Map<String, Double> data) {
-            this.data = data;
-        }
-
-        public Map<String, Double> getData() {
-            return data;
-        }
-
-        public void setData(Map<String, Double> data) {
-            this.data = data;
         }
     }
 }
