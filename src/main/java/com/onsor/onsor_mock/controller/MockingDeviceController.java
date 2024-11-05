@@ -21,7 +21,7 @@ public class MockingDeviceController {
     private static final String BROKER_URL = "tcp://localhost:1883";
     private static final String CLIENT_ID = "spring-boot-client";
     private static final String TOPIC = "v1/devices/me/telemetry";
-    private static final String ACCESS_TOKEN = "wirHzDCrnf7WeRiskLfK";
+    private static final String ACCESS_TOKEN = "YgaoLbYFNU06NFrt8AjE";
 
     private MqttClient mqttClient;
 
@@ -29,7 +29,7 @@ public class MockingDeviceController {
 
     @Autowired
     public MockingDeviceController() throws MqttException {
-        mqttClient = new MqttClient(BROKER_URL, CLIENT_ID);
+        mqttClient = new MqttClient(BROKER_URL, CLIENT_ID, new org.eclipse.paho.client.mqttv3.persist.MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setCleanSession(true);
         options.setUserName(ACCESS_TOKEN);
@@ -47,15 +47,10 @@ public class MockingDeviceController {
     }
 
     private void generateAndSendPieChartData() {
-        // Simulate random values for different categories
-        double value1 = random.nextDouble() * 35;
-        double value2 = random.nextDouble() * 35;
-        double value3 = random.nextDouble() * 35;
+        double value1 = random.nextDouble() * 89;
 
         Map<String, Double> dataMap = new HashMap<>();
-        dataMap.put("device 1", value1);
-        dataMap.put("device 2", value2);
-        dataMap.put("device 3", value3);
+        dataMap.put("temperature", value1);
 
         // Prepare JSON payload
         StringBuilder payloadBuilder = new StringBuilder("{");
